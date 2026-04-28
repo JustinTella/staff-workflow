@@ -6,7 +6,7 @@ const CHECKLIST = [
   { text: "Schedule patient appointment for pre-travel consultation and vaccine administration", note: "Schedule once vaccines have arrived" },
   { text: "Write and order prescriptions" },
   {
-    html: `Assemble <a class="checklist-link" href="file:///C:/Users/jtell/Downloads/travel_kit.html" target="_blank" rel="noopener noreferrer">travel kit</a>`,
+    html: `Assemble <a class="checklist-link" href="https://justintella.github.io/blue-angel-intranet/travel_kit.html" target="_blank" rel="noopener noreferrer">travel kit</a>`,
   },
   { text: "Conduct patient appointment, administer vaccines, assign prescriptions, and provide the travel kit" },
   { text: "Schedule any follow-ups if necessary" },
@@ -420,7 +420,11 @@ function attachEvents() {
   });
 
   document.querySelectorAll(".checklist-link").forEach(link => {
-    link.addEventListener("click", e => e.stopPropagation());
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      e.stopPropagation();
+      window.open(link.href, "_blank", "noopener,noreferrer");
+    });
   });
 
   document.querySelectorAll(".reset-btn").forEach(btn => {
