@@ -1,0 +1,125 @@
+@import url("../sujansky-workflow/styles.css");
+
+.page-header {
+  align-items: flex-start;
+}
+
+.page-note {
+  max-width: 560px;
+}
+
+.practice-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.practice-filter {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.practice-filter:hover {
+  background: var(--surface-alt);
+  color: var(--text);
+}
+
+.practice-filter.is-active[data-practice-filter="all"] {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.practice-filter.is-active[data-practice-filter="sujansky"] {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  color: #1d4ed8;
+}
+
+.practice-filter.is-active[data-practice-filter="daniher"] {
+  background: #ccfbf1;
+  border-color: #99f6e4;
+  color: #0f766e;
+}
+
+.header-actions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.source-chip {
+  font-weight: 700;
+  font-size: 0.79rem;
+  padding: 4px 10px;
+  border: 1px solid currentColor;
+}
+
+.source-chip.source-sujansky {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.source-chip.source-daniher {
+  background: #ccfbf1;
+  color: #0f766e;
+}
+
+.patient-card-sujansky {
+  border-left: 6px solid #1d4ed8;
+}
+
+.patient-card-daniher {
+  border-left: 6px solid #0f766e;
+}
+
+.patient-card-sujansky.is-open {
+  border-color: #93c5fd;
+  border-left-color: #1d4ed8;
+}
+
+.patient-card-daniher.is-open {
+  border-color: #99f6e4;
+  border-left-color: #0f766e;
+}
+
+.patient-card-sujansky .info-section-title,
+.patient-card-sujansky .itinerary-subtitle-label {
+  color: #1d4ed8;
+}
+
+.patient-card-daniher .info-section-title,
+.patient-card-daniher .itinerary-subtitle-label {
+  color: #0f766e;
+}
+
+.patient-card-sujansky .patient-summary:hover {
+  background: #f8fbff;
+}
+
+.patient-card-daniher .patient-summary:hover {
+  background: #f4fffd;
+}
+
+.practice-note {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.archive-info {
+  align-items: baseline;
+}
+
+@media (max-width: 600px) {
+  .practice-legend {
+    grid-template-columns: 1fr;
+  }
+
+  .header-actions { justify-content: flex-start; }
+}
