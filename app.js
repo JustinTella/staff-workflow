@@ -17,8 +17,8 @@ let patients = [];
 let expandedId = null;
 let activePracticeFilter = "all";
 
-const STORAGE_KEY = "travelMedicineChecklistState_staff_v1";
-const ARCHIVE_KEY = "travelMedicineArchiveState_staff_v1";
+const STORAGE_KEY = "travelMedicineChecklistState_v3";
+const ARCHIVE_KEY = "travelMedicineArchiveState_v2";
 
 function loadState() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); }
@@ -499,7 +499,7 @@ async function init() {
     if (result.status === "fulfilled") {
       loaded.push(...result.value.map(patient => ({
         ...patient,
-        id: `${source.id}-${patient.id}`,
+        id: patient.id,
         sourceId: source.id,
         practice: source.label,
       })));
