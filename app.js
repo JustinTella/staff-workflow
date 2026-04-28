@@ -313,7 +313,7 @@ function renderPatients() {
           <input type="checkbox" data-patient-id="${p.id}" data-task-index="${i}" ${checked ? "checked" : ""} />
           <span class="checklist-item-text">
             ${task.html ?? task.text}
-            ${task.note ? `<span class="checklist-note">! ${task.note}</span>` : ""}
+            ${task.note ? `<span class="checklist-note">⚠ ${task.note}</span>` : ""}
           </span>
         </label>`;
       }).join("")}
