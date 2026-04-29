@@ -53,6 +53,16 @@ function fmtDate(dateStr) {
   });
 }
 
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  }[ch]));
+}
+
 function firstDeparture(p) {
   return p.stops?.[0]?.arrival ?? "";
 }
@@ -213,6 +223,8 @@ function updatePracticeFilters() {
 function renderItinerary(p) {
   if (!p.stops || !p.stops.length) return "";
   const n = p.numCountries || countryCount(p.stops);
+  const selections = Array.isArray(p.travelSelections) ? p.travelSelections : [];
+  const comments = String(p.concerns ?? "").trim();
 
   return `
     <div class="patient-info-section">
@@ -242,6 +254,18 @@ function renderItinerary(p) {
         </tbody>
       </table>
       <div class="itinerary-facts">
+        ${selections.length ? `
+          <div class="fact-card fact-card-wide">
+            <span class="fact-label">Select all that apply</span>
+            <div class="travel-flags-list">
+              ${selections.map(item => `<div class="travel-flag">${escapeHtml(item)}</div>`).join("")}
+            </div>
+          </div>` : ""}
+        ${comments ? `
+          <div class="fact-card fact-card-wide">
+            <span class="fact-label">Any more details or questions surrounding your travel the office should be aware of?</span>
+            <div class="travel-comments-copy">${escapeHtml(comments).replace(/\r?\n/g, "<br />")}</div>
+          </div>` : ""}
         ${p.returnDate ? `
           <div class="fact-card">
             <span class="fact-label">Return date</span>
