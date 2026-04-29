@@ -238,7 +238,7 @@ function renderItinerary(p) {
         <thead>
           <tr>
             <th>Country</th>
-            <th>City / Region</th>
+            <th>City / Region / Area</th>
             <th>Arrival</th>
             <th>Departure</th>
           </tr>
