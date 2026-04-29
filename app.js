@@ -89,6 +89,30 @@ function destinationLabel(stops) {
   return `${first} + ${stops.length - 1} more`;
 }
 
+function travelLocationsParam(stops) {
+  const parts = (stops || [])
+    .map(stop => [stop.country, stop.city].filter(Boolean).join(", "))
+    .filter(Boolean);
+  return parts.join(" | ") || "Unknown destination";
+}
+
+function buildTravelKitUrl(patient) {
+  const url = new URL("https://justintella.github.io/blue-angel-intranet/travel_kit.html");
+  url.searchParams.set("view", "staff");
+  url.searchParams.set("patientId", patient.id);
+  url.searchParams.set("patient", patient.name);
+  url.searchParams.set("practice", patient.sourceId || "staff");
+  url.searchParams.set("locations", travelLocationsParam(patient.stops));
+  return url.toString();
+}
+
+function renderChecklistTask(task, index, patient) {
+  if (index === 4) {
+    return `Assemble <a class="checklist-link" href="${buildTravelKitUrl(patient)}" target="_blank" rel="noopener noreferrer">travel kit</a>`;
+  }
+  return task.html ?? task.text;
+}
+
 function getProgress(patientId, state) {
   const ps = state[patientId] || {};
   const done = CHECKLIST.filter((_, i) => ps[i]).length;
@@ -336,7 +360,7 @@ function renderPatients() {
         <label class="checklist-item${checked ? " completed" : ""}">
           <input type="checkbox" data-patient-id="${p.id}" data-task-index="${i}" ${checked ? "checked" : ""} />
           <span class="checklist-item-text">
-            ${task.html ?? task.text}
+            ${renderChecklistTask(task, i, p)}
             ${task.note ? `<span class="checklist-note">⚠ ${task.note}</span>` : ""}
           </span>
         </label>`;
