@@ -608,6 +608,10 @@ async function init() {
   });
 
   patients = loaded;
+  const _sus = loaded.filter(p => p.sourceId === "sujansky").map(p => ({ id: p.id, name: p.name, stops: p.stops || [] }));
+  const _dan = loaded.filter(p => p.sourceId === "daniher").map(p => ({ id: p.id, name: p.name, stops: p.stops || [] }));
+  if (_sus.length) localStorage.setItem("sujansky-patients-v1", JSON.stringify(_sus));
+  if (_dan.length) localStorage.setItem("daniher-patients-v1", JSON.stringify(_dan));
   renderPatients();
 
   if (!patients.length) {
