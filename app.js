@@ -106,9 +106,13 @@ function buildTravelKitUrl(patient) {
   return url.toString();
 }
 
-function renderChecklistTask(task, index, patient) {
+function renderTravelKitApproval(patient, isApproved) {
+  return `<span class="approval-pill ${isApproved ? "approval-pill-approved" : "approval-pill-pending"}" data-patient-id="${patient.id}" data-task-index="4">${isApproved ? "Approved" : "Not Approved"}</span>`;
+}
+
+function renderChecklistTask(task, index, patient, isChecked) {
   if (index === 4) {
-    return `Assemble <a class="checklist-link" href="${buildTravelKitUrl(patient)}" target="_blank" rel="noopener noreferrer">travel kit</a>`;
+    return `<span class="checklist-inline">Assemble <a class="checklist-link" href="${buildTravelKitUrl(patient)}" target="_blank" rel="noopener noreferrer">travel kit</a> ${renderTravelKitApproval(patient, isChecked)}</span>`;
   }
   return task.html ?? task.text;
 }
@@ -360,7 +364,7 @@ function renderPatients() {
         <label class="checklist-item${checked ? " completed" : ""}">
           <input type="checkbox" data-patient-id="${p.id}" data-task-index="${i}" ${checked ? "checked" : ""} />
           <span class="checklist-item-text">
-            ${renderChecklistTask(task, i, p)}
+            ${renderChecklistTask(task, i, p, checked)}
             ${task.note ? `<span class="checklist-note">⚠ ${task.note}</span>` : ""}
           </span>
         </label>`;
@@ -414,6 +418,14 @@ function updatePatientProgress(patientId, state) {
   const prompt = document.getElementById(`prompt-${patientId}`);
   if (prompt) {
     prompt.classList.toggle("visible", prog.done === prog.total);
+  }
+
+  const approvalPill = card.querySelector('.approval-pill[data-task-index="4"]');
+  if (approvalPill) {
+    const approved = !!(state[patientId] || {})[4];
+    approvalPill.textContent = approved ? "Approved" : "Not Approved";
+    approvalPill.classList.toggle("approval-pill-approved", approved);
+    approvalPill.classList.toggle("approval-pill-pending", !approved);
   }
 }
 
