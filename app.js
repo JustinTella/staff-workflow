@@ -106,13 +106,35 @@ function buildTravelKitUrl(patient) {
   return url.toString();
 }
 
-function renderTravelKitApproval(patient, isApproved) {
-  return `<span class="approval-pill ${isApproved ? "approval-pill-approved" : "approval-pill-pending"}" data-patient-id="${patient.id}" data-task-index="4">${isApproved ? "Approved" : "Not Approved"}</span>`;
+function getTravelKitStorageKey() {
+  return "travel-kit-workflow-records-v3";
 }
 
-function renderChecklistTask(task, index, patient, isChecked) {
+function getTravelKitRecordKey(patient) {
+  return `${patient.sourceId || "staff"}::${patient.id}::${travelLocationsParam(patient.stops)}`;
+}
+
+function loadTravelKitRecords() {
+  try {
+    return JSON.parse(window.localStorage.getItem(getTravelKitStorageKey()) || "{}");
+  } catch (error) {
+    return {};
+  }
+}
+
+function isTravelKitApproved(patient) {
+  const records = loadTravelKitRecords();
+  return !!records[getTravelKitRecordKey(patient)]?.approved;
+}
+
+function renderTravelKitApproval(patient) {
+  const approved = isTravelKitApproved(patient);
+  return `<a class="approval-pill ${approved ? "approval-pill-approved" : "approval-pill-pending"}" data-patient-id="${patient.id}" data-task-index="4" href="${buildTravelKitUrl(patient)}" target="_blank" rel="noopener noreferrer">${approved ? "Approved" : "Not Approved"}</a>`;
+}
+
+function renderChecklistTask(task, index, patient) {
   if (index === 4) {
-    return `<span class="checklist-inline">Assemble <a class="checklist-link" href="${buildTravelKitUrl(patient)}" target="_blank" rel="noopener noreferrer">travel kit</a> ${renderTravelKitApproval(patient, isChecked)}</span>`;
+    return `<span class="checklist-inline">Assemble <a class="checklist-link" href="${buildTravelKitUrl(patient)}" target="_blank" rel="noopener noreferrer">travel kit</a> ${renderTravelKitApproval(patient)}</span>`;
   }
   return task.html ?? task.text;
 }
@@ -364,7 +386,7 @@ function renderPatients() {
         <label class="checklist-item${checked ? " completed" : ""}">
           <input type="checkbox" data-patient-id="${p.id}" data-task-index="${i}" ${checked ? "checked" : ""} />
           <span class="checklist-item-text">
-            ${renderChecklistTask(task, i, p, checked)}
+            ${renderChecklistTask(task, i, p)}
             ${task.note ? `<span class="checklist-note">⚠ ${task.note}</span>` : ""}
           </span>
         </label>`;
@@ -421,9 +443,11 @@ function updatePatientProgress(patientId, state) {
   }
 
   const approvalPill = card.querySelector('.approval-pill[data-task-index="4"]');
-  if (approvalPill) {
-    const approved = !!(state[patientId] || {})[4];
+  const patient = patients.find(entry => entry.id === patientId);
+  if (approvalPill && patient) {
+    const approved = isTravelKitApproved(patient);
     approvalPill.textContent = approved ? "Approved" : "Not Approved";
+    approvalPill.href = buildTravelKitUrl(patient);
     approvalPill.classList.toggle("approval-pill-approved", approved);
     approvalPill.classList.toggle("approval-pill-pending", !approved);
   }
@@ -540,6 +564,10 @@ function attachEvents() {
 function onSearch() {
   renderPatients();
 }
+
+window.addEventListener("focus", () => {
+  renderPatients();
+});
 
 async function init() {
   document.getElementById("patient-list").innerHTML =
