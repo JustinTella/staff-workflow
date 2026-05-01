@@ -288,7 +288,6 @@ function renderItinerary(p) {
         <span class="itinerary-subtitle-label">Practice</span>
         <strong>${p.practice}</strong>
       </div>
-      ${p.purpose ? `<div class="itinerary-subtitle"><span class="itinerary-subtitle-label">Purpose</span><strong>${p.purpose}</strong></div>` : ""}
       <table class="itinerary-table">
         <thead>
           <tr>
