@@ -107,11 +107,11 @@ function buildTravelKitUrl(patient) {
 }
 
 function getTravelKitStorageKey() {
-  return "travel-kit-workflow-records-v3";
+  return "travel-kit-workflow-records-v4";
 }
 
 function getTravelKitRecordKey(patient) {
-  return `${patient.sourceId || "staff"}::${patient.id}::${travelLocationsParam(patient.stops)}`;
+  return `${patient.sourceId || "staff"}::${patient.id}`;
 }
 
 function loadTravelKitRecords() {
